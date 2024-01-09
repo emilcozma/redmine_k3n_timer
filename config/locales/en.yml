@@ -1,0 +1,49 @@
+# English strings go here for Rails i18n
+en:
+  label_k3n_timer: "Office time"
+  button_log_k3n_timer: "Add office time"
+  project_module_k3n_timer: "keeen timer"
+
+  permission_view_k3n_timer: "View keeen timer"
+  permission_create_k3n_timer: "Create keeen timer (keeen IN)"
+  permission_edit_k3n_timer: "Edit keeen timer"
+  permission_delete_k3n_timer: "Delete keeen timer"
+
+  k3n_timer_my_block: "Time tracking"
+
+  label_timelog_tab: "Spent time"
+  label_office_timelog_tab: "Office time"
+
+  field_k3n_timer: "Enable keeen IN"
+
+  k3n_timer:
+    # Please don't forget to translate the plugin name.
+    plugin_name: "Keeen Timer"
+
+    start: "Keeen IN"
+    recording: "[xx:xx:xx]"
+
+    commit: "Keeen OUT"
+    discard: "Discard"
+    close: "Close"
+
+    details: "Details"
+    time: "Spent time:"
+    comment: "Comments / Note"
+
+    logging_since: "Logging since %{time}"
+    notification_title: "Logged %{hours} hours"
+    should_punch_in_message: "You were last seen at %{time}."
+    should_punch_in_title: "Don't forget to punch in!"
+    should_punch_out_message: "You have not been seen since %{time}, but are still logging time to %{descr}."
+    should_punch_out_title: "Still working?"
+    state_descr_issue: "%{project}, issue #%{issue}"
+    state_descr: "%{project}"
+
+    need_rest_api: "Please check that 'Enable REST web service' is\nenabled in Redmine Administration/Settings/API."
+    no_permission: "You do not have permission to log time to %{project}."
+    not_enabled: "Time tracking not enabled for %{project}."
+    nothing_inferred: "Neither project nor issue could be inferred from current page."
+    submit_failed: "Failed to log work shift to Redmine: %{error}"
+
+    forgot_keeen_out_text: "Probably you forgot to <b>%{commit}</b> in <b>[%{start}]</b>, so please fill the desired end time and <b>%{commit}</b> or <b>%{discard}</b>."

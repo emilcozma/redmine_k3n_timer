@@ -1,0 +1,9 @@
+api.office_time_entry do
+  api.id @office_time_entry.id
+  api.user(:id => @office_time_entry.user_id, :name => @office_time_entry.user.name) unless @office_time_entry.user.nil?
+  api.hours @office_time_entry.hours
+  api.comments @office_time_entry.comments
+  api.spent_on @office_time_entry.spent_on
+  api.created_on @office_time_entry.created_on
+  api.updated_on @office_time_entry.updated_on
+end

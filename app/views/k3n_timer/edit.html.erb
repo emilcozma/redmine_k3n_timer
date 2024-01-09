@@ -1,0 +1,6 @@
+<h2><%= l(:label_k3n_timer) %></h2>
+
+<%= labelled_form_for @office_time_entry, :url => k3n_timer_update_path(@office_time_entry), :html => {:multipart => true} do |f| %>
+  <%= render :partial => 'form', :locals => {:f => f} %>
+  <%= submit_tag l(:button_save) %>
+<% end %>

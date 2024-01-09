@@ -1,0 +1,41 @@
+# German strings go here for Rails i18n
+de:
+
+  k3n_timer_my_block: "Zeiterfassung"
+
+  label_timelog_tab: "Aufgewendete Zeit"
+  label_office_timelog_tab: "keeen IN"
+
+  k3n_timer:
+    # Please don't forget to translate the plugin name.
+    plugin_name: "Keeen Timer"
+
+    start: "Keeen IN"
+    recording: "[xx:xx:xx]"
+
+    extra_fields: "zusätzliche Felder"
+
+    commit: "Keeen OUT"
+    discard: "Verwerfen"
+    close: "Beenden"
+
+    details: "Einzelheiten"
+    time: "Verbrachte Zeit:"
+    comment: "erbrachte Leistung(en)"
+
+    logging_since: "Buchung seit %{time}"
+    notification_title: "%{hours} Stunden zu %{descr} gebucht"
+    should_punch_in_message: "You were last seen at %{time}."
+    should_punch_in_title: "Don't forget to punch in!"
+    should_punch_out_message: "You have not been seen since %{time}, but are still logging time to %{descr}."
+    should_punch_out_title: "Still working?"
+    state_descr_issue: "%{project}, Ticket #%{issue}"
+    state_descr: "%{project}"
+
+    need_rest_api: "Bitte prüfen Sie ob 'REST-Schnittstelle aktivieren' in Redmine unter Administration/Konfiguration/API aktiviert ist."
+    no_permission: "Sie haben keine Berechtigungen Zeit auf %{project} zu buchen."
+    not_enabled: "Time tracking not enabled for %{project}."
+    nothing_inferred: "Weder das Projekt noch das Ticket konnte von der aktuellen Seite abgeleitet werden."
+    submit_failed: "Fehler beim Buchen zu Redmine: %{error}"
+
+    forgot_keeen_out_text: "Es scheint du hast dich gestern nicht abgemeldet. Korrigiere deinen Zeiteintrag oder lösche diesen."

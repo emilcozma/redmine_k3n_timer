@@ -1,0 +1,43 @@
+<h3>
+  <%= link_to l(:label_timelog_tab), time_entries_path(:user_id => 'me') %>
+  (<%= l(:label_last_n_days, days) %>: <%= l_hours_short entries.sum(&:hours) %>)
+  <%= link_to l(:button_log_time), new_time_entry_path, :class => "icon-only icon-add", :title => l(:button_log_time) if User.current.allowed_to?(:log_time, nil, :global => true) %>
+</h3>
+
+<% if entries.any? %>
+<%= form_tag({}, :data => {:cm_url => time_entries_context_menu_path}) do %>
+<div class="autoscroll list">
+<table class="list time-entries odd-even">
+<thead><tr>
+<th><%= l(:label_activity) %></th>
+<th><%= l(:label_project) %></th>
+<th><%= l(:field_comments) %></th>
+<th><%= l(:field_hours) %></th>
+</tr></thead>
+<tbody>
+<% entries_by_day.keys.sort.reverse.each do |day| %>
+   <% reset_cycle %>
+  <tr class="total">
+    <td><strong><%= day == User.current.today ? l(:label_today).titleize : format_date(day) %></strong></td>
+    <td colspan="2"></td>
+    <td class="hours"><em><%= html_hours(format_hours(entries_by_day[day].sum(&:hours))) %> (<%= if !office_entries_by_day[day].blank? then html_hours(format_hours(office_entries_by_day[day].map(&:duration).inject(0, &:+).fdiv(3600))) else html_hours(format_hours(0)) end %>)</em></td>
+  </tr>
+  <% entries_by_day[day].each do |entry| -%>
+  <tr id="time-entry-<%= entry.id %>" class="time-entry <%= cycle('odd', 'even') %> hascontextmenu">
+    <td class="activity">
+      <%= check_box_tag("ids[]", entry.id, false, :style => 'display:none;', :id => nil) %>
+      <%= entry.activity %>
+    </td>
+    <td class="subject"><%= entry.project %> <%= h(' - ') + link_to_issue(entry.issue, :truncate => 50) if entry.issue %></td>
+    <td class="comments"><%= entry.comments %></td>
+    <td class="hours"><%= html_hours(format_hours(entry.hours)) %></td>
+  </tr>
+  <% end -%>
+<% end -%>
+</tbody>
+</table>
+</div>
+<% end %>
+<% else %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

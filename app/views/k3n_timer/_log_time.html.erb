@@ -1,0 +1,44 @@
+<% if User.current.logged? && User.current.k3n_timer? %>
+<%= stylesheet_link_tag 'jquery-ui-timepicker-addon.css', :plugin => 'k3n_timer', :media => 'all' %>
+<%= stylesheet_link_tag 'k3n_timer.css', :plugin => 'k3n_timer', :media => 'all' %>
+<%= javascript_include_tag 'jquery-ui-timepicker-addon.js', :plugin => 'k3n_timer' %>
+<%= javascript_include_tag 'k3n_timer.js', :plugin => 'k3n_timer' %>
+
+<% if Redmine::Plugin.installed?('redmine_hrm') %>
+<% @entries = HrmAttendance.where(user_id: User.current.id, hrm_attendance_type_id: 1, attendance_date: Date.today.strftime("%Y-%m-%d")) %>
+<% total_hours = 0 %>
+<% @entries.each do |item| %>
+<% total_hours = total_hours + item.duration.fdiv(3600) %>
+<% end %>
+<% h = total_hours.floor %>
+<% m = ((total_hours - h) * 60).floor %>
+<% s = ((total_hours - h - m.fdiv(60)) * 3600) %>
+<% @total_time = "%02d:%02d:%02d" % [ h.to_f.round(2), m.to_f.round(2), s.to_f.round(2) ] %>
+<% @total_hours = "%02d" % [ h.to_f.round(2) ] %>
+<% @total_minutes = "%02d" % [ m.to_f.round(2) ] %>
+<% @total_seconds = "%02d" % [ s.to_f.round(2) ] %>
+<% else %>
+<% @entries = K3nTimer.visible.where(user_id: User.current.id, spent_on: Date.today.strftime("%Y-%m-%d")) %>
+<% total_hours = @entries.sum(:hours) %>
+<% h = total_hours.floor %>
+<% m = ((total_hours - h) * 60).floor %>
+<% s = ((total_hours - h - m.fdiv(60)) * 3600) %>
+<% @total_time = "%02d:%02d:%02d" % [ h.to_f.round(2), m.to_f.round(2), s.to_f.round(2) ] %>
+<% @total_hours = "%02d" % [ h.to_f.round(2) ] %>
+<% @total_minutes = "%02d" % [ m.to_f.round(2) ] %>
+<% @total_seconds = "%02d" % [ s.to_f.round(2) ] %>
+<% end %>
+
+<%= javascript_tag do %>
+	K3nTimer.setPlugin(<%= Redmine::Plugin.find(:k3n_timer).to_json.html_safe %>);
+	K3nTimer.setCurrentTimer(<%= {:entries => @entries, :total_count => @entries.count, :total_hours => total_hours, :total_time => @total_time, :total_time_hours => @total_hours, :total_time_minutes => @total_minutes, :total_time_seconds => @total_seconds}.to_json.html_safe %>);
+	K3nTimer.setLang(<%= t(:k3n_timer).to_json.html_safe %>);
+	K3nTimer.setUserId(<%= User.current.id.to_json.html_safe %>);
+	K3nTimer.setApiKey(<%= (Setting.rest_api_enabled? ? User.current.api_key : nil).to_json.html_safe %>);
+	K3nTimer.setApiUrl(<%= url_for({:controller => 'k3n_timer', :action => 'create', :format => 'json'}).to_json.html_safe %>);
+	K3nTimer.setLanguage(<%= User.current.language.to_json.html_safe %>);
+	$(document).ready(function() {
+		K3nTimer.init();
+	});
+<% end %>
+<% end %>

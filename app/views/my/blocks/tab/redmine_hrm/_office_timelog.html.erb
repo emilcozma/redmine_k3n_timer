@@ -1,0 +1,47 @@
+<h3>
+  <%= link_to l(:label_office_timelog_tab), user_hrm_attendances_path(User.current) %>
+  (<%= l(:label_last_n_days, days) %>: <%= l_hours_short total_hours %>)
+  <%= link_to l(:button_log_time), new_user_hrm_attendance_path(:user_id => User.current.id), :class => "icon-only icon-add", :title => l(:button_log_time) if User.current.allowed_to?(:log_time, nil, :global => true) %>
+</h3>
+
+<% if entries.any? %>
+<%= form_tag({}, :data => {:cm_url => time_entries_context_menu_path}) do %>
+<table class="list time-entries odd-even">
+<thead><tr>
+<th><%= l(:field_attendance_date) %></th>
+<th><%= l(:field_hrm_attendance_type) %></th>
+<th><%= l(:field_start_time) %></th>
+<th><%= l(:field_end_time) %></th>
+<th><%= l(:field_duration) %></th>
+<th><%= l(:field_half_day_full_day) %></th>
+<th><%= l(:field_approved) %></th>
+<th>&nbsp;</th>
+</tr></thead>
+<tbody>
+<% entries_by_day.keys.sort.reverse.each do |day| %>
+  <% reset_cycle %>
+  <tr class="total">
+    <td><strong><%= day == User.current.today ? l(:label_today).titleize : format_date(day) %></strong></td>
+    <td colspan="3"></td>
+    <td class="hours"><em><%= if !entries_by_day[day].blank? then html_hours(format_hours(entries_by_day[day].map(&:duration).inject(0, &:+).fdiv(3600))) else html_hours(format_hours(0)) end %></em></td>
+	<td colspan="3"></td>
+  </tr>
+  <% entries_by_day[day].each do |entry| -%>
+  <tr id="office-time-entry-<%= entry.id %>" class="office-time-entry <%= cycle('odd', 'even') %>">
+    <td class="date"><%= format_date(entry.attendance_date) %></td>
+	<td class="activity"><%= entry.name %></td>
+    <td class="start_time"><%= format_time(entry.start_time, false) %></td>
+    <td class="end_time"><%= format_time(entry.end_time, false) %></td>
+    <td class="duration"><%= html_hours(format_hours(entry.duration.fdiv(3600))) %></td>
+	<td class="half_day_full_day" style="width:120px;"><%= hrm_format_half_day_full_day(entry.half_day_full_day) %></td>
+	<td class="approved" style="width:80px;"><%= hrm_format_approved_as_icon(entry, entry.approved) %></td>
+	<td class="buttons" style="width:40px;"><%= if entry.editable_by?(User.current) then link_to_attendance(entry, name: l(:button_edit), title: l(:button_edit), class: 'icon-only icon-edit') end %></td>
+  </tr>
+  <% end -%>
+<% end -%>
+</tbody>
+</table>
+<% end %>
+<% else %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>

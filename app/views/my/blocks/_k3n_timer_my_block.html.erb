@@ -1,0 +1,42 @@
+<div class="contextual">
+  <%= link_to_function l(:label_options), "$('#office-timelog-settings').toggle();", :class => 'icon-only icon-settings', :title => l(:label_options) %>
+</div>
+
+<h2><%= l(:k3n_timer_my_block) %></h2>
+
+<% days = settings[:days].to_i %>
+<% days = 7 if days < 1 || days > 365 %>
+
+<div id="office-timelog-settings" style="display:none;">
+  <%= form_tag(my_page_path, :remote => true) do %>
+    <div class="box">
+      <p>
+      <label>
+        <%= l(:button_show) %>:
+        <%= text_field_tag 'settings[k3n_timer_my_block][days]', days, :size => 6 %>
+        <%= l(:label_day_plural) %>
+      </label>
+      </p>
+    </div>
+    <p>
+      <%= submit_tag l(:button_save) %>
+      <%= link_to_function l(:button_cancel), "$('#office-timelog-settings').toggle();" %>
+    </p>
+  <% end %>
+</div>
+
+<div class="tabs hide-when-print">
+	<ul>
+		<li><a class="selected" id="tab-timelog" onclick="showTab('timelog', this.href); this.blur(); return false;" href="<%= time_entries_path(:user_id => 'me') %>"><%= l(:label_timelog_tab) %></a></li>
+		<% if Redmine::Plugin.installed?('redmine_hrm') then %><li><a  id="tab-office-timelog" onclick="showTab('office-timelog', this.href); this.blur(); return false;" href="<%= user_hrm_attendances_path(User.current) %>"><%= l(:label_office_timelog_tab) %></a></li><% else %><li><a  id="tab-office-timelog" onclick="showTab('office-timelog', this.href); this.blur(); return false;" href="<%= k3n_timer_index_path %>"><%= l(:label_office_timelog_tab) %></a></li><% end %>
+	</ul>
+</div>
+
+
+<div class="tab-content" id="tab-content-timelog">
+	<%= render_timelog_tab_block('timelog', settings) %>
+</div>
+<div class="tab-content" id="tab-content-office-timelog" style="display:none;">
+	<%= render_office_timelog_tab_block('office_timelog', settings) %>
+</div>
+

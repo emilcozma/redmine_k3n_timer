@@ -1,0 +1,8 @@
+<%= error_messages_for 'office_time_entry' %>
+<%= back_url_hidden_field_tag %>
+
+<div class="box tabular">
+  <p><%= f.date_field :spent_on, :size => 10, :required => true %><%= calendar_for('office_time_entry_spent_on') %></p>
+  <p><%= f.hours_field :hours, :size => 6, :required => true %></p>
+  <p><%= f.text_field :comments, :size => 100, :maxlength => 1024, :required => false %></p>
+</div>

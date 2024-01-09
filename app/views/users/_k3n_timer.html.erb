@@ -1,0 +1,6 @@
+<hr/>
+<p class="extended">
+	<label for="user_k3n_timer"><%= l(:field_k3n_timer) %></label>
+	<input name="user[k3n_timer]" type="hidden" value="0" />
+	<input type="checkbox" value="1" name="user[k3n_timer]" id="user_k3n_timer" <%= @user.k3n_timer? ? 'checked="checked"' : '' %> />
+</p>

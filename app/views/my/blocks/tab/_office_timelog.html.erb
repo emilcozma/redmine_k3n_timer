@@ -1,0 +1,39 @@
+<h3>
+  <%= link_to l(:label_office_timelog_tab), k3n_timer_index_path %>
+  (<%= l(:label_last_n_days, days) %>: <%= l_hours_short total_hours %>)
+  <%= link_to l(:button_log_time), k3n_timer_new_path(:user_id => User.current.id), :class => "icon-only icon-add", :title => l(:button_log_time) if User.current.allowed_to?(:log_time, nil, :global => true) %>
+</h3>
+
+<% if entries.any? %>
+<%= form_tag({}, :data => {:cm_url => time_entries_context_menu_path}) do %>
+<table class="list time-entries odd-even">
+<thead><tr>
+<th><%= l(:field_spent_on) %></th>
+<th><%= l(:field_comments) %></th>
+<th><%= l(:field_hours) %></th>
+<th>&nbsp;</th>
+</tr></thead>
+<tbody>
+<% entries_by_day.keys.sort.reverse.each do |day| %>
+  <% reset_cycle %>
+  <tr class="total">
+    <td><strong><%= day == User.current.today ? l(:label_today).titleize : format_date(day) %></strong></td>
+    <td colspan="1"></td>
+    <td class="hours"><em><%= if !entries_by_day[day].blank? then html_hours(format_hours(entries_by_day[day].map(&:hours).inject(0, &:+))) else html_hours(format_hours(0)) end %></em></td>
+	<td colspan="1"></td>
+  </tr>
+  <% entries_by_day[day].each do |entry| -%>
+  <tr id="office-time-entry-<%= entry.id %>" class="office-time-entry <%= cycle('odd', 'even') %>">
+    <td class="date"><%= format_date(entry.spent_on) %></td>
+	<td class="comments"><%= entry.comments %></td>
+    <td class="hours"><%= html_hours(format_hours(entry.hours)) %></td>
+	<td class="buttons" style="width:40px;"><%= if entry.editable_by?(User.current) then link_to l(:button_edit), k3n_timer_edit_path(entry), :title => l(:button_edit), :class => 'icon-only icon-edit end' end %></td>
+  </tr>
+  <% end -%>
+<% end -%>
+</tbody>
+</table>
+<% end %>
+<% else %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
